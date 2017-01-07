@@ -17,7 +17,7 @@ struct neighb2d_iterator;
 struct point2d{
     int row;
     int col;
-    neighb2d_iterator createNIterator();
+    neighb2d_iterator createIterator();
 };
 
 struct box2d{
@@ -97,7 +97,7 @@ struct neighb2d_iterator{
     }
 
     bool isDone() const{
-        return (ite.row == p.row && ite.col == p.col+1);
+        return (ite.row == p.row-1 && ite.col == p.col+1);
     }
 
     void next(){
@@ -105,22 +105,22 @@ struct neighb2d_iterator{
             ite.row++;
             ite.col--;
         }
-        if(ite.row==p.row && ite.col==p.col-1){
+        else if(ite.row==p.row && ite.col==p.col-1){
             ite.row++;
             ite.col++;
         }
-        if(ite.row==p.row+1 && ite.col==p.col){
+        else if(ite.row==p.row+1 && ite.col==p.col){
             ite.row--;
             ite.col++;
         }
-        if(ite.row==p.row && ite.col==p.col+1){
+        else if(ite.row==p.row && ite.col==p.col+1){
             ite.row--;
-            ite.col--;
+            //ite.col--;
         }
     }
 };
 
-neighb2d_iterator point2d::createNIterator(){
+neighb2d_iterator point2d::createIterator(){
     neighb2d_iterator i;
     i.setPoint(*this);
     return i;
@@ -139,12 +139,19 @@ int main(int argc, char *argv[])
         std::cout << "(" << i.elt().row << "," << i.elt().col << ")" << " ";
     std::cout << std::endl;
 
-    auto it = p.createNIterator();
-    for(it.start(); it.isDone(); it.next()){
-        std::cout << "plop" << std::endl;
+    std::cout << "plop1" << std::endl;
+
+    auto it = p.createIterator();
+    //it.start();
+    //std::cout << it.isDone() << std::endl;
+    //std::cout << it.elt().row << "," << it.elt().col << std::endl;
+
+    for(it.start(); it.isDone() != true; it.next()){
+        //std::cout << "plop" << std::endl;
         std::cout << "(" << it.elt().row << "," << it.elt().col << ")" << " ";
     }
     std::cout << std::endl;
+    std::cout << "plop2" << std::endl;
 
     return 0;
 }

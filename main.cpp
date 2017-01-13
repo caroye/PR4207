@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <ctime>
 
 /*
  * iterator{
@@ -73,11 +74,26 @@ box2d_iterator box2d::createIterator(){
 
 
 
-/*template <typename T>
-struct image2d<T>{
+template <typename T>
+struct image2d{
     box2d d;
     std::vector<T> data;
-};*/
+
+    image2d(box2d b/*, vector data*/)
+        : d(b)
+    {
+        data.reserve(d.pmax.row*d.pmax.col);}
+
+    T operator()(const point2d& p) const{
+        //return mat[j*this->i + i];
+        unsigned i= p.col*p.row+p.row;
+        return data[i];
+    }
+    T& operator()(point2d p){
+        unsigned i= p.col*p.row+p.row;
+        return data[i];
+    }
+};
 
 
 struct neighb2d_iterator{
@@ -142,16 +158,54 @@ int main(int argc, char *argv[])
     std::cout << "plop1" << std::endl;
 
     auto it = p.createIterator();
-    //it.start();
-    //std::cout << it.isDone() << std::endl;
-    //std::cout << it.elt().row << "," << it.elt().col << std::endl;
-
     for(it.start(); it.isDone() != true; it.next()){
-        //std::cout << "plop" << std::endl;
         std::cout << "(" << it.elt().row << "," << it.elt().col << ")" << " ";
     }
     std::cout << std::endl;
     std::cout << "plop2" << std::endl;
+
+
+    /*
+    ///////////////////////////////Algo//////////////////////////////////////
+
+    srand((unsigned int)time(NULL));
+    int j;
+    using bool_t = int ;
+    point2d pmin2{0,0}, pmax2{3,3};
+    box2d dom{pmin2,pmax2};
+    bool_t tab[16];
+    std::cout << "1" << std::endl;
+    for(j=0; j<16; j++){
+        int a=rand()%2;
+        tab[j]=a;
+    }
+
+    std::cout << "2" << std::endl;
+    //std::vector<bool_t> vec;
+    image2d<bool_t> im{dom};
+    std::cout << "3" << std::endl;
+    auto ite = dom.createIterator();
+    std::cout << "5" << std::endl;
+    for(j=0; j<16; j++){
+        for(ite.start(); ite.isDone() != true; ite.next()){
+            //std::cout << "6" << std::endl;
+            //std::cout << ite.elt().row << ", " << ite.elt().col << std::endl;
+            im(ite.elt())=tab[j];
+            //std::cout << "7" << std::endl;
+        }
+    }
+    std::cout << "4" << std::endl;
+    for(ite.start(); ite.isDone() != true; ite.next())
+        std::cout << "(" << ite.elt().row << "," << ite.elt().col << ") = " << im(ite.elt()) << " , ";
+    std::cout <<"plop"<< std::endl;
+
+    //*/
+
+
+
+
+
+
 
     return 0;
 }
